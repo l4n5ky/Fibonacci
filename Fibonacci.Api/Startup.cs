@@ -1,4 +1,5 @@
 ﻿using Fibonacci.Api.Framework;
+using Fibonacci.Api.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,7 @@ namespace Fibonacci.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddSingleton<IFibRepository, InMemoryFibRepository>();
             ConfigureRabbitMQ(services);
         }
 
