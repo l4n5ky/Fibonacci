@@ -1,4 +1,4 @@
-﻿using Fibonacci.Api.Framework;
+﻿using Fibonacci.Service.Framework;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RawRabbit;
 using RawRabbit.vNext;
 
-namespace Fibonacci.Api
+namespace Fibonacci.Service
 {
     public class Startup
     {
@@ -34,7 +34,7 @@ namespace Fibonacci.Api
 
             app.UseMvc();
         }
-        
+
         private void ConfigureRabbitMQ(IServiceCollection services)
         {
             var options = new RabbitMqOptions();
