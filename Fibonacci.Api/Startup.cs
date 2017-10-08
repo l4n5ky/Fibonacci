@@ -37,6 +37,7 @@ namespace Fibonacci.Api
             }
 
             app.UseMvc();
+            ConfigureRabbitMQSubscriptions(app);
         }
         
         private void ConfigureRabbitMQ(IServiceCollection services)
