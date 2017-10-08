@@ -1,5 +1,7 @@
 ﻿using Fibonacci.Api.Framework;
+using Fibonacci.Api.Handlers;
 using Fibonacci.Api.Repositories;
+using Fibonacci.Messages.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -45,6 +47,19 @@ namespace Fibonacci.Api
 
             var client = BusClientFactory.CreateDefault(options);
             services.AddSingleton<IBusClient>(_ => client);
+            services.AddTransient<IEventHandler<ValueCalculated>, ValueCalculatedEventHandler>();
+        }
+
+        private void ConfigureRabbitMQSubscriptions(IApplicationBuilder app)
+        {
+            IBusClient _client = app.ApplicationServices.GetService<IBusClient>();
+
+            var handler = app.ApplicationServices.GetService<IEventHandler<ValueCalculated>>();
+
+            _client.SubscribeAsync<ValueCalculated>(async (msg, context) =>
+            {
+                await handler.HandleAsync(msg);
+            });
         }
     }
 }

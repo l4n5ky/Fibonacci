@@ -1,5 +1,6 @@
 ﻿using Fibonacci.Messages.Commands;
 using Fibonacci.Service.Framework;
+using Fibonacci.Service.Handlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -45,6 +46,7 @@ namespace Fibonacci.Service
 
             var client = BusClientFactory.CreateDefault(options);
             services.AddSingleton<IBusClient>(_ => client);
+            services.AddTransient<ICommandHandler<CalculateValue>, CalculateValueHandler>();
         }
 
         private void ConfigureRabbitMQSubscriptions(IApplicationBuilder app)
