@@ -24,7 +24,7 @@ namespace Fibonacci.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSingleton<IFibRepository, InMemoryFibRepository>();
+            services.AddSingleton<IFibRepository>(_ => new InMemoryFibRepository());
             ConfigureRabbitMQ(services);
         }
 
