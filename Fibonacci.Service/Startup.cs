@@ -1,4 +1,5 @@
-﻿using Fibonacci.Service.Framework;
+﻿using Fibonacci.Messages.Commands;
+using Fibonacci.Service.Framework;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -33,6 +34,7 @@ namespace Fibonacci.Service
             }
 
             app.UseMvc();
+            ConfigureRabbitMQSubscriptions(app);
         }
 
         private void ConfigureRabbitMQ(IServiceCollection services)
@@ -43,6 +45,18 @@ namespace Fibonacci.Service
 
             var client = BusClientFactory.CreateDefault(options);
             services.AddSingleton<IBusClient>(_ => client);
+        }
+
+        private void ConfigureRabbitMQSubscriptions(IApplicationBuilder app)
+        {
+            IBusClient _client = app.ApplicationServices.GetService<IBusClient>();
+
+            var handler = app.ApplicationServices.GetService<ICommandHandler<CalculateValue>>();
+
+            _client.SubscribeAsync<CalculateValue>(async (msg, context) =>
+            {
+                await handler.HandleAsync(msg);
+            });
         }
     }
 }
